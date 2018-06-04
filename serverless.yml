@@ -33,6 +33,26 @@ functions:
             parameters:
                paths:
                  id: true
+  players_write:
+    handler: bin/players/write
+    events:
+      - http:
+          path: players/{id}
+          method: put
+          request:
+            parameters:
+               paths:
+                 id: true
+  players_delete:
+    handler: bin/players/delete
+    events:
+      - http:
+          path: players/{id}
+          method: delete
+          request:
+            parameters:
+               paths:
+                 id: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

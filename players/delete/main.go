@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -9,7 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/peteclark-io/footie/players"
 	"github.com/peteclark-io/footie/utils"
 )
@@ -18,13 +16,13 @@ import (
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	id, ok := request.PathParameters[players.PlayerKey]
 	if !ok {
-		return events.APIGatewayProxyResponse{Body: "Please provide an 'id'", StatusCode: http.StatusBadRequest}, nil
+		return utils.HTTPResponse("Please provide an 'id'", http.StatusBadRequest), nil
 	}
 
 	sess := session.Must(session.NewSession())
 	db := dynamodb.New(sess)
 
-	res, err := db.GetItem(&dynamodb.GetItemInput{
+	_, err := db.DeleteItem(&dynamodb.DeleteItemInput{
 		TableName: aws.String(players.TableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			players.PlayerKey: {
@@ -33,23 +31,11 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		},
 	})
 
-	if len(res.Item) == 0 {
-		return utils.HTTPResponse("Player not found", http.StatusNotFound), nil
-	}
-
 	if err != nil {
 		return utils.HTTPResponse(err.Error(), http.StatusServiceUnavailable), nil
 	}
 
-	pl := players.Player{}
-	err = dynamodbattribute.UnmarshalMap(res.Item, &pl)
-
-	if err != nil {
-		return utils.HTTPResponse("Failed to unmarshal response", http.StatusServiceUnavailable), nil
-	}
-
-	b, _ := json.Marshal(pl)
-	return events.APIGatewayProxyResponse{Body: string(b), StatusCode: http.StatusOK, Headers: map[string]string{"Content-Type": "application/json"}}, nil
+	return utils.HTTPResponse("Player deleted", http.StatusAccepted), nil
 }
 
 func main() {
