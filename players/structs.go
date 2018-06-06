@@ -6,11 +6,12 @@ import (
 )
 
 const TableName = "players"
-const PlayerKey = "id"
+const TableKey = "id"
 
 type Player struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
+	ID          string `json:"id"`
+	Email       string `json:"email"`
+	DisplayName string `json:"displayName"`
 }
 
 func (p *Player) ToItem() map[string]*dynamodb.AttributeValue {
@@ -20,6 +21,9 @@ func (p *Player) ToItem() map[string]*dynamodb.AttributeValue {
 		},
 		"email": {
 			S: aws.String(p.Email),
+		},
+		"displayName": {
+			S: aws.String(p.DisplayName),
 		},
 	}
 }

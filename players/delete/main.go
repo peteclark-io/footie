@@ -14,7 +14,7 @@ import (
 
 // Handler does alllllll the logic
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id, ok := request.PathParameters[players.PlayerKey]
+	id, ok := request.PathParameters[players.TableKey]
 	if !ok {
 		return utils.HTTPResponse("Please provide an 'id'", http.StatusBadRequest), nil
 	}
@@ -25,7 +25,7 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	_, err := db.DeleteItem(&dynamodb.DeleteItemInput{
 		TableName: aws.String(players.TableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			players.PlayerKey: {
+			players.TableKey: {
 				S: aws.String(id),
 			},
 		},

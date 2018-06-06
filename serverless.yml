@@ -23,6 +23,36 @@ package:
    - ./bin/**
 
 functions:
+  matches_read:
+    handler: bin/matches/read
+    events:
+      - http:
+          path: matches/{id}
+          method: get
+          request:
+            parameters:
+               paths:
+                 id: true
+  matches_write:
+    handler: bin/matches/write
+    events:
+      - http:
+          path: matches/{id}
+          method: put
+          request:
+            parameters:
+               paths:
+                 id: true
+  matches_delete:
+    handler: bin/matches/delete
+    events:
+      - http:
+          path: matches/{id}
+          method: delete
+          request:
+            parameters:
+               paths:
+                 id: true
   players_read:
     handler: bin/players/read
     events:
@@ -91,7 +121,7 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
-    NewResource:
+    PlayersTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
@@ -104,6 +134,22 @@ resources:
           ReadCapacityUnits: "5"
           WriteCapacityUnits: "5"
         TableName: "players"
+        Tags:
+          - Key: application
+            Value: footie
+    MatchesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "id"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: "5"
+          WriteCapacityUnits: "5"
+        TableName: "matches"
         Tags:
           - Key: application
             Value: footie
