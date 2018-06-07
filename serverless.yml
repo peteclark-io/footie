@@ -83,6 +83,42 @@ functions:
             parameters:
                paths:
                  id: true
+  groups_read:
+    handler: bin/groups/read
+    events:
+      - http:
+          path: groups/{id}
+          method: get
+          request:
+            parameters:
+               paths:
+                 id: true
+  groups_write:
+    handler: bin/groups/write
+    events:
+      - http:
+          path: groups/{id}
+          method: put
+          request:
+            parameters:
+               paths:
+                 id: true
+  groups_create:
+    handler: bin/groups/create
+    events:
+      - http:
+          path: groups
+          method: post
+  groups_delete:
+    handler: bin/groups/delete
+    events:
+      - http:
+          path: groups/{id}
+          method: delete
+          request:
+            parameters:
+               paths:
+                 id: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -150,6 +186,22 @@ resources:
           ReadCapacityUnits: "5"
           WriteCapacityUnits: "5"
         TableName: "matches"
+        Tags:
+          - Key: application
+            Value: footie
+    GroupsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "id"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: "5"
+          WriteCapacityUnits: "5"
+        TableName: "player_groups"
         Tags:
           - Key: application
             Value: footie

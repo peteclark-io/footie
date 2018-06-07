@@ -3,6 +3,12 @@ build:
 	env GOOS=linux go build -ldflags="-s -w" -o bin/players/read players/read/main.go
 	env GOOS=linux go build -ldflags="-s -w" -o bin/players/write players/write/main.go
 	env GOOS=linux go build -ldflags="-s -w" -o bin/players/delete players/delete/main.go
+
 	env GOOS=linux go build -ldflags="-s -w" -o bin/matches/read matches/read/main.go
 	env GOOS=linux go build -ldflags="-s -w" -o bin/matches/write matches/write/main.go
 	env GOOS=linux go build -ldflags="-s -w" -o bin/matches/delete matches/delete/main.go
+
+	env GOOS=linux go build -ldflags="-s -w" -o bin/groups/read groups/read/main.go
+	env GOOS=linux go build -ldflags="-s -w" -o bin/groups/write groups/write/main.go
+	env GOOS=linux go build -ldflags="-s -w" -o bin/groups/delete groups/delete/main.go
+	env GOOS=linux go build -ldflags="-s -w" -o bin/groups/create groups/create/main.go
