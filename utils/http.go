@@ -7,7 +7,7 @@ import (
 )
 
 type Msg struct {
-	Msg string `json:"msg"`
+	Msg string `json:"message"`
 }
 
 func HTTPResponse(msg string, status int) events.APIGatewayProxyResponse {

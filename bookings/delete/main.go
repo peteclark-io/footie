@@ -1,20 +1,20 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/peteclark-io/footie/matches"
+	"github.com/peteclark-io/footie/bookings"
 	"github.com/peteclark-io/footie/utils"
 )
 
 // Handler does alllllll the logic
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id, ok := request.PathParameters[matches.TableKey]
+	id, ok := request.PathParameters[bookings.TableKey]
 	if !ok {
 		return utils.HTTPResponse("Please provide an 'id'", http.StatusBadRequest), nil
 	}
@@ -22,18 +22,20 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	sess := session.Must(session.NewSession())
 	db := dynamodb.New(sess)
 
-	m, err := matches.GetMatch(db, id)
-
-	if err == matches.ErrMatchNotFound {
-		return utils.HTTPResponse("Match not found", http.StatusNotFound), nil
-	}
+	_, err := db.DeleteItem(&dynamodb.DeleteItemInput{
+		TableName: aws.String(bookings.TableName),
+		Key: map[string]*dynamodb.AttributeValue{
+			bookings.TableKey: {
+				S: aws.String(id),
+			},
+		},
+	})
 
 	if err != nil {
 		return utils.HTTPResponse(err.Error(), http.StatusServiceUnavailable), nil
 	}
 
-	b, _ := json.Marshal(m)
-	return events.APIGatewayProxyResponse{Body: string(b), StatusCode: http.StatusOK, Headers: map[string]string{"Content-Type": "application/json"}}, nil
+	return utils.HTTPResponse("Booking deleted", http.StatusAccepted), nil
 }
 
 func main() {

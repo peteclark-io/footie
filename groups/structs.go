@@ -11,6 +11,7 @@ const TableKey = "id"
 
 type Group struct {
 	ID        string            `json:"id"`
+	Name      string            `json:"name"`
 	Players   []*players.Player `json:"players"`
 	PlayerIDs []string          `json:"playerIDs,omitempty"`
 }
@@ -19,6 +20,9 @@ func (p *Group) ToItem() map[string]*dynamodb.AttributeValue {
 	return map[string]*dynamodb.AttributeValue{
 		"id": {
 			S: aws.String(p.ID),
+		},
+		"name": {
+			S: aws.String(p.Name),
 		},
 		"playerIDs": p.ToPlayerIDs(),
 	}

@@ -17,8 +17,8 @@ var (
 
 type Player struct {
 	ID          string `json:"id"`
-	Email       string `json:"email"`
-	DisplayName string `json:"displayName"`
+	Email       string `json:"email,omitempty"`
+	DisplayName string `json:"displayName,omitempty"`
 }
 
 func (p *Player) ToItem() map[string]*dynamodb.AttributeValue {

@@ -6,27 +6,35 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/peteclark-io/footie/ids"
 	"github.com/peteclark-io/footie/matches"
 	"github.com/peteclark-io/footie/utils"
 )
 
 // Handler does alllllll the logic
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id, ok := request.PathParameters[matches.TableKey]
-	if !ok {
-		return utils.HTTPResponse("Please provide an 'id'", http.StatusBadRequest), nil
+	m := matches.Match{}
+	err := json.Unmarshal([]byte(request.Body), &m)
+	if err != nil {
+		return utils.HTTPResponse("Body should be application/json", http.StatusBadRequest), nil
 	}
+
+	if m.ID != "" {
+		return utils.HTTPResponse("New matches should not contain an 'id' field", http.StatusBadRequest), nil
+	}
+
+	m.ID = ids.NewID()
 
 	sess := session.Must(session.NewSession())
 	db := dynamodb.New(sess)
 
-	m, err := matches.GetMatch(db, id)
-
-	if err == matches.ErrMatchNotFound {
-		return utils.HTTPResponse("Match not found", http.StatusNotFound), nil
-	}
+	_, err = db.PutItem(&dynamodb.PutItemInput{
+		Item:      m.ToItem(),
+		TableName: aws.String(matches.TableName),
+	})
 
 	if err != nil {
 		return utils.HTTPResponse(err.Error(), http.StatusServiceUnavailable), nil
