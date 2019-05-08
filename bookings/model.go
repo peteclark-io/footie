@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/peteclark-io/footie/matches"
+	log "github.com/sirupsen/logrus"
 )
 
 const tableName = "group_bookings"
@@ -21,6 +22,7 @@ var errBookingNotFound = errors.New(`Booking not found`)
 type Booking struct {
 	ID       string           `json:"id"`
 	Starts   *time.Time       `json:"starts"`
+	Group    string           `json:"group"`
 	Matches  []*matches.Match `json:"matches"`
 	MatchIDs []string         `json:"matchIDs,omitempty"`
 }
@@ -32,6 +34,7 @@ func unmarshalBooking(body io.Reader) (*Booking, int, error) {
 	err := dec.Decode(&b)
 
 	if err != nil {
+		log.WithError(err).Error("Failed to unmarshal booking body")
 		return nil, http.StatusBadRequest, errors.New("Body should be application/json")
 	}
 

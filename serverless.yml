@@ -28,11 +28,6 @@ provider:
         - "dynamodb:*"
       Resource: "arn:aws:dynamodb:*"
 
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
 package:
  exclude:
    - ./**
@@ -315,7 +310,3 @@ resources:
         Tags:
           - Key: application
             Value: footie
-  # Outputs:
-  #    NewOutput:
-  #      Description: "Description for the output"
-  #      Value: "Some output value"

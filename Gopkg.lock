@@ -2,17 +2,28 @@
 
 
 [[projects]]
+  digest = "1:ba6ee1209e91a8b29255fbf41ad32c0abcd53c4ee60f8a477029003fce01dd82"
+  name = "github.com/Financial-Times/transactionid-utils-go"
+  packages = ["."]
+  pruneopts = ""
+  revision = "df2f00c734957c9dd651ce23ab0e0902504c7636"
+  version = "v0.2.0"
+
+[[projects]]
+  digest = "1:d5039f72505274cddd25fef3b4790e7d985eaf063a0c7df1363ed6292ddc30fb"
   name = "github.com/aws/aws-lambda-go"
   packages = [
     "events",
     "lambda",
     "lambda/messages",
-    "lambdacontext"
+    "lambdacontext",
   ]
+  pruneopts = ""
   revision = "6e2e37798efbb1dfd8e9c6681702e683a6046517"
   version = "v1.0.1"
 
 [[projects]]
+  digest = "1:e9ff55fdac0e5d8ad3b0179d8da6af70350e4f663f46fb4b34918829e8205a95"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -43,49 +54,132 @@
     "private/protocol/xml/xmlutil",
     "service/dynamodb",
     "service/dynamodb/dynamodbattribute",
-    "service/sts"
+    "service/sts",
   ]
+  pruneopts = ""
   revision = "854f9d07a932452f1552955e127e50ba5ebb25cc"
   version = "v1.13.56"
 
 [[projects]]
+  digest = "1:56c130d885a4aacae1dd9c7b71cfe39912c7ebc1ff7d2b46083c8812996dc43b"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
+  pruneopts = ""
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
 
 [[projects]]
+  digest = "1:617b3e0f5989d4ff866a1820480990c65dfc9257eb080da749a45e2d76681b02"
   name = "github.com/go-ini/ini"
   packages = ["."]
+  pruneopts = ""
   revision = "06f5f3d67269ccec1fe5fe4134ba6e982984f7f5"
   version = "v1.37.0"
 
 [[projects]]
+  digest = "1:5a2d1e6415389d20d86812c60feeb675b70b2d65bd1b0d9e6743616f29bc3498"
+  name = "github.com/husobee/vestigo"
+  packages = ["."]
+  pruneopts = ""
+  revision = "f8f5b5dc2bd74408887fd4b462055e324c4cbd63"
+  version = "v1.1.0"
+
+[[projects]]
+  digest = "1:d557c549fb8422ece9f4878b4ea2b22f3fc36a46e195472f70bffc03a7b012c9"
+  name = "github.com/jawher/mow.cli"
+  packages = [
+    ".",
+    "internal/container",
+    "internal/flow",
+    "internal/fsm",
+    "internal/lexer",
+    "internal/matcher",
+    "internal/parser",
+    "internal/values",
+  ]
+  pruneopts = ""
+  revision = "d9c41c7c90d99b076732ee72a657577128d610da"
+  version = "v1.0.5"
+
+[[projects]]
+  digest = "1:6f49eae0c1e5dab1dafafee34b207aeb7a42303105960944828c2079b92fc88e"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
+  pruneopts = ""
   revision = "0b12d6b5"
 
 [[projects]]
+  digest = "1:0f51cee70b0d254dbc93c22666ea2abf211af81c1701a96d04e2284b408621db"
+  name = "github.com/konsorten/go-windows-terminal-sequences"
+  packages = ["."]
+  pruneopts = ""
+  revision = "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e"
+  version = "v1.0.2"
+
+[[projects]]
+  digest = "1:63e142fc50307bcb3c57494913cfc9c12f6061160bdf97a678f78c71615f939b"
   name = "github.com/pborman/uuid"
   packages = ["."]
+  pruneopts = ""
   revision = "e790cca94e6cc75c7064b1332e63811d4aae1a53"
   version = "v1.1"
 
 [[projects]]
+  digest = "1:256484dbbcd271f9ecebc6795b2df8cad4c458dd0f5fd82a8c2fa0c29f233411"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
+  pruneopts = ""
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:631ea4a52a20ca54eceb1077e8c7e553a4f86a58639824825d9259374f7c362f"
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  pruneopts = ""
+  revision = "8bdbc7bcc01dcbb8ec23dc8a28e332258d25251f"
+  version = "v1.4.1"
+
+[[projects]]
+  digest = "1:a30066593578732a356dc7e5d7f78d69184ca65aeeff5939241a3ab10559bb06"
   name = "github.com/stretchr/testify"
   packages = ["assert"]
+  pruneopts = ""
   revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
   version = "v1.2.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:4f349a7da3e52df38345913607fb3daac185365588a633088107146283b48b46"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  pruneopts = ""
+  revision = "f4e77d36d62c17c2336347bb2670ddbd02d092b7"
+
+[[projects]]
+  branch = "master"
+  digest = "1:715452e95922861c2d89d72dddb1885df4d39e1b7f8937b92b1d7128a371c8ed"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  pruneopts = ""
+  revision = "12bbe5a7a5209180b72cc7e3ed9da40442fe3246"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "40d1bb2c86b75cd277511b765aab716de41dacb9f939dc1f81341a93a8051f08"
+  input-imports = [
+    "github.com/Financial-Times/transactionid-utils-go",
+    "github.com/aws/aws-lambda-go/events",
+    "github.com/aws/aws-lambda-go/lambda",
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/dynamodb",
+    "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute",
+    "github.com/husobee/vestigo",
+    "github.com/jawher/mow.cli",
+    "github.com/pborman/uuid",
+    "github.com/sirupsen/logrus",
+    "github.com/stretchr/testify/assert",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
