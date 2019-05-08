@@ -1,20 +1,36 @@
 package matches
 
 import (
+	"encoding/json"
 	"errors"
+	"io"
+	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
-const TableName = "matches"
-const TableKey = "id"
+const tableName = "matches"
+const tableKey = "id"
 
 var ErrMatchNotFound = errors.New("match not found")
 
 type Match struct {
 	ID string `json:"id"`
+}
+
+func unmarshalMatch(body io.Reader) (*Match, int, error) {
+	m := Match{}
+
+	dec := json.NewDecoder(body)
+	err := dec.Decode(&m)
+
+	if err != nil {
+		return nil, http.StatusBadRequest, errors.New("Body should be application/json")
+	}
+
+	return &m, 0, nil
 }
 
 func (m *Match) ToItem() map[string]*dynamodb.AttributeValue {
@@ -27,20 +43,20 @@ func (m *Match) ToItem() map[string]*dynamodb.AttributeValue {
 
 func GetMatch(db *dynamodb.DynamoDB, id string) (*Match, error) {
 	res, err := db.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String(TableName),
+		TableName: aws.String(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			TableKey: {
+			tableKey: {
 				S: aws.String(id),
 			},
 		},
 	})
 
-	if len(res.Item) == 0 {
-		return nil, ErrMatchNotFound
-	}
-
 	if err != nil {
 		return nil, err
+	}
+
+	if len(res.Item) == 0 {
+		return nil, ErrMatchNotFound
 	}
 
 	m := &Match{}

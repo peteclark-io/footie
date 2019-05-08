@@ -41,7 +41,10 @@ package:
 
 functions:
   matches_read:
-    handler: bin/matches/read
+    handler: bin/footie
+    environment:
+      RESOURCE: matches
+      METHOD: read
     events:
       - http:
           path: matches/{id}
@@ -52,7 +55,10 @@ functions:
                paths:
                  id: true
   matches_write:
-    handler: bin/matches/write
+    handler: bin/footie
+    environment:
+      RESOURCE: matches
+      METHOD: write
     events:
       - http:
           path: matches/{id}
@@ -63,14 +69,20 @@ functions:
                paths:
                  id: true
   matches_create:
-    handler: bin/matches/create
+    handler: bin/footie
+    environment:
+      RESOURCE: matches
+      METHOD: create
     events:
       - http:
           path: matches
           method: post
           private: true
   matches_delete:
-    handler: bin/matches/delete
+    handler: bin/footie
+    environment:
+      RESOURCE: matches
+      METHOD: delete
     events:
       - http:
           path: matches/{id}
@@ -81,7 +93,10 @@ functions:
                paths:
                  id: true
   players_read:
-    handler: bin/players/read
+    handler: bin/footie
+    environment:
+      RESOURCE: players
+      METHOD: read
     events:
       - http:
           path: players/{id}
@@ -92,7 +107,10 @@ functions:
                paths:
                  id: true
   players_write:
-    handler: bin/players/write
+    handler: bin/footie
+    environment:
+      RESOURCE: players
+      METHOD: write
     events:
       - http:
           path: players/{id}
@@ -103,14 +121,20 @@ functions:
                paths:
                  id: true
   players_create:
-    handler: bin/players/create
+    handler: bin/footie
+    environment:
+      RESOURCE: players
+      METHOD: create
     events:
       - http:
           path: players
           method: post
           private: true
   players_delete:
-    handler: bin/players/delete
+    handler: bin/footie
+    environment:
+      RESOURCE: players
+      METHOD: delete
     events:
       - http:
           path: players/{id}
@@ -121,7 +145,10 @@ functions:
                paths:
                  id: true
   groups_read:
-    handler: bin/groups/read
+    handler: bin/footie
+    environment:
+      RESOURCE: groups
+      METHOD: read
     events:
       - http:
           path: groups/{id}
@@ -132,7 +159,10 @@ functions:
                paths:
                  id: true
   groups_write:
-    handler: bin/groups/write
+    handler: bin/footie
+    environment:
+      RESOURCE: groups
+      METHOD: write
     events:
       - http:
           path: groups/{id}
@@ -143,14 +173,20 @@ functions:
                paths:
                  id: true
   groups_create:
-    handler: bin/groups/create
+    handler: bin/footie
+    environment:
+      RESOURCE: groups
+      METHOD: create
     events:
       - http:
           path: groups
           method: post
           private: true
   groups_delete:
-    handler: bin/groups/delete
+    handler: bin/footie
+    environment:
+      RESOURCE: groups
+      METHOD: delete
     events:
       - http:
           path: groups/{id}
@@ -161,7 +197,10 @@ functions:
                paths:
                  id: true
   bookings_read:
-    handler: bin/bookings/read
+    handler: bin/footie
+    environment:
+      RESOURCE: bookings
+      METHOD: read
     events:
       - http:
           path: bookings/{id}
@@ -172,7 +211,10 @@ functions:
                paths:
                  id: true
   bookings_write:
-    handler: bin/bookings/write
+    handler: bin/footie
+    environment:
+      RESOURCE: bookings
+      METHOD: write
     events:
       - http:
           path: bookings/{id}
@@ -183,14 +225,20 @@ functions:
                paths:
                  id: true
   bookings_create:
-    handler: bin/bookings/create
+    handler: bin/footie
+    environment:
+      RESOURCE: bookings
+      METHOD: create
     events:
       - http:
           path: bookings
           method: post
           private: true
   bookings_delete:
-    handler: bin/bookings/delete
+    handler: bin/footie
+    environment:
+      RESOURCE: bookings
+      METHOD: delete
     events:
       - http:
           path: bookings/{id}
