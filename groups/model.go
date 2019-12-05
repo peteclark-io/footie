@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/peteclark-io/footie/bookings"
 	"github.com/peteclark-io/footie/players"
 )
 
@@ -18,10 +19,12 @@ const tableKey = "id"
 var errGroupNotFound = errors.New("Group not found")
 
 type Group struct {
-	ID        string            `json:"id"`
-	Name      string            `json:"name"`
-	Players   []*players.Player `json:"players"`
-	PlayerIDs []string          `json:"playerIDs,omitempty"`
+	ID         string              `json:"id"`
+	Name       string              `json:"name"`
+	Players    []*players.Player   `json:"players,omitempty"`
+	PlayerIDs  []string            `json:"playerIDs,omitempty"`
+	Bookings   []*bookings.Booking `json:"bookings,omitempty"`
+	BookingIDs []string            `json:"bookingIDs,omitempty"`
 }
 
 func unmarshalGroup(body io.Reader) (*Group, int, error) {
@@ -74,8 +77,22 @@ func GetGroup(db *dynamodb.DynamoDB, id string) (*Group, error) {
 
 		gr.Players = append(gr.Players, pl)
 	}
-
 	gr.PlayerIDs = nil
+
+	for _, id := range gr.BookingIDs {
+		b, err := bookings.GetBooking(db, id)
+		if err == bookings.ErrBookingNotFound {
+			continue
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		gr.Bookings = append(gr.Bookings, b)
+	}
+	gr.BookingIDs = nil
+
 	return gr, nil
 }
 
@@ -87,7 +104,8 @@ func (g *Group) ToItem() map[string]*dynamodb.AttributeValue {
 		"name": {
 			S: aws.String(g.Name),
 		},
-		"playerIDs": g.toPlayerIDs(),
+		"playerIDs":  g.toPlayerIDs(),
+		"bookingIDs": g.toBookingIDs(),
 	}
 }
 
@@ -95,6 +113,14 @@ func (g *Group) toPlayerIDs() *dynamodb.AttributeValue {
 	vals := make([]*dynamodb.AttributeValue, 0)
 	for _, p := range g.Players {
 		vals = append(vals, &dynamodb.AttributeValue{S: aws.String(p.ID)})
+	}
+	return &dynamodb.AttributeValue{L: vals}
+}
+
+func (g *Group) toBookingIDs() *dynamodb.AttributeValue {
+	vals := make([]*dynamodb.AttributeValue, 0)
+	for _, b := range g.Bookings {
+		vals = append(vals, &dynamodb.AttributeValue{S: aws.String(b.ID)})
 	}
 	return &dynamodb.AttributeValue{L: vals}
 }

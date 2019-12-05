@@ -167,5 +167,4 @@ func writeRequestLog(logger *log.Logger, req *http.Request, transactionID string
 		"referer":        req.Referer(),
 		"userAgent":      req.UserAgent(),
 	}).Info("")
-
 }

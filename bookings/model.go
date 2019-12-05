@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -17,14 +18,17 @@ import (
 const tableName = "group_bookings"
 const tableKey = "id"
 
-var errBookingNotFound = errors.New(`Booking not found`)
+var ErrBookingNotFound = errors.New(`Booking not found`)
 
 type Booking struct {
-	ID       string           `json:"id"`
-	Starts   *time.Time       `json:"starts"`
-	Group    string           `json:"group"`
-	Matches  []*matches.Match `json:"matches"`
-	MatchIDs []string         `json:"matchIDs,omitempty"`
+	ID              string           `json:"id"`
+	Group           string           `json:"group"`
+	Start           *time.Time       `json:"start"`
+	Cadence         string           `json:"cadence"`
+	Length          int              `json:"length"`
+	Matches         []*matches.Match `json:"matches"`
+	MatchIDs        []string         `json:"matchIDs,omitempty"`
+	cadenceDuration time.Duration
 }
 
 func unmarshalBooking(body io.Reader) (*Booking, int, error) {
@@ -56,7 +60,7 @@ func GetBooking(db *dynamodb.DynamoDB, id string) (*Booking, error) {
 	}
 
 	if len(res.Item) == 0 {
-		return nil, errBookingNotFound
+		return nil, ErrBookingNotFound
 	}
 
 	b := &Booking{}
@@ -88,8 +92,17 @@ func (b *Booking) ToItem() map[string]*dynamodb.AttributeValue {
 		"id": {
 			S: aws.String(b.ID),
 		},
-		"starts": {
-			S: aws.String(b.Starts.UTC().Format(time.RFC3339Nano)),
+		"start": {
+			S: aws.String(b.Start.UTC().Format(time.RFC3339Nano)),
+		},
+		"cadence": {
+			S: aws.String(b.Cadence),
+		},
+		"group": {
+			S: aws.String(b.Group),
+		},
+		"length": {
+			N: aws.String(strconv.Itoa(b.Length)),
 		},
 		"matchIDs": b.ToMatchIDs(),
 	}

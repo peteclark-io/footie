@@ -21,11 +21,15 @@ type Handler interface {
 }
 
 func Response(w http.ResponseWriter, status int, msg string) {
-	w.Header().Add("Content-Type", "application/json")
+	AddCommonHeaders(w)
 
 	w.WriteHeader(status)
 	enc := json.NewEncoder(w)
 	enc.Encode(&Msg{Msg: msg})
+}
+
+func AddCommonHeaders(w http.ResponseWriter) {
+	w.Header().Add("Content-Type", "application/json")
 }
 
 func CheckID(tableKey string, req *http.Request) (string, int, error) {

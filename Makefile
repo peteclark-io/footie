@@ -6,5 +6,8 @@ compile:
 
 build: dep compile
 
-deploy:
+run: dep
+	go build && ./footie http
+
+deploy: build
 	sls deploy

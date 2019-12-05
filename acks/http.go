@@ -1,4 +1,4 @@
-package players
+package acks
 
 import (
 	"encoding/json"
@@ -16,17 +16,17 @@ func NewHTTPHandler() resources.Handler {
 }
 
 func (h *httpHandler) Name() string {
-	return "players"
+	return "acknowledgements"
 }
 
 func (h *httpHandler) Create(w http.ResponseWriter, req *http.Request) {
-	pl, status, err := unmarshalPlayer(req.Body)
+	b, status, err := unmarshalAcknowledgement(req.Body)
 	if err != nil {
 		resources.Response(w, status, err.Error())
 		return
 	}
 
-	status, err = h.repository.Create(pl)
+	status, err = h.repository.Create(b)
 	if err != nil {
 		resources.Response(w, status, err.Error())
 		return
@@ -35,7 +35,7 @@ func (h *httpHandler) Create(w http.ResponseWriter, req *http.Request) {
 	resources.AddCommonHeaders(w)
 	w.WriteHeader(http.StatusOK)
 	enc := json.NewEncoder(w)
-	enc.Encode(pl)
+	enc.Encode(b)
 }
 
 func (h *httpHandler) Delete(w http.ResponseWriter, req *http.Request) {
@@ -52,7 +52,7 @@ func (h *httpHandler) Delete(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	resources.Response(w, http.StatusAccepted, "Player deleted")
+	resources.Response(w, http.StatusAccepted, "Ack deleted")
 }
 
 func (h *httpHandler) Read(w http.ResponseWriter, req *http.Request) {
@@ -62,7 +62,7 @@ func (h *httpHandler) Read(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	pl, status, err := h.repository.Read(id)
+	b, status, err := h.repository.Read(id)
 	if err != nil {
 		resources.Response(w, status, err.Error())
 		return
@@ -71,7 +71,7 @@ func (h *httpHandler) Read(w http.ResponseWriter, req *http.Request) {
 	resources.AddCommonHeaders(w)
 	w.WriteHeader(http.StatusOK)
 	enc := json.NewEncoder(w)
-	enc.Encode(pl)
+	enc.Encode(b)
 }
 
 func (h *httpHandler) Write(w http.ResponseWriter, req *http.Request) {
@@ -81,18 +81,18 @@ func (h *httpHandler) Write(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	pl, status, err := unmarshalPlayer(req.Body)
+	b, status, err := unmarshalAcknowledgement(req.Body)
 	if err != nil {
 		resources.Response(w, status, err.Error())
 		return
 	}
 
-	status, err = h.repository.Write(id, pl)
+	status, err = h.repository.Write(id, b)
 
 	if err != nil {
 		resources.Response(w, status, err.Error())
 		return
 	}
 
-	resources.Response(w, http.StatusOK, "Saved player")
+	resources.Response(w, http.StatusOK, "Saved ack")
 }

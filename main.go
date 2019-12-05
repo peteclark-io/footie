@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/husobee/vestigo"
 	"github.com/jawher/mow.cli"
+	"github.com/peteclark-io/footie/acks"
 	"github.com/peteclark-io/footie/aws"
 	"github.com/peteclark-io/footie/bookings"
 	"github.com/peteclark-io/footie/groups"
@@ -34,7 +35,7 @@ func main() {
 	log.SetLevel(log.InfoLevel)
 
 	app.Command("http", "Runs a webserver for local testing", func(cmd *cli.Cmd) {
-		startHTTP(players.NewHTTPHandler(), matches.NewHTTPHandler(), groups.NewHTTPHandler(), bookings.NewHTTPHandler())
+		startHTTP(players.NewHTTPHandler(), acks.NewHTTPHandler(), matches.NewHTTPHandler(), groups.NewHTTPHandler(), bookings.NewHTTPHandler())
 	})
 
 	app.Action = func() {
@@ -48,6 +49,8 @@ func main() {
 			handler = groups.NewAWSHandler()
 		case "bookings":
 			handler = bookings.NewAWSHandler()
+		case "acknowledgements":
+			handler = acks.NewAWSHandler()
 		}
 
 		startAWS(*method, handler)
@@ -65,6 +68,11 @@ func main() {
 
 func startHTTP(handlers ...resources.Handler) {
 	r := vestigo.NewRouter()
+
+	r.SetGlobalCors(&vestigo.CorsAccessControl{
+		AllowOrigin:  []string{"http://localhost:3000"},
+		AllowHeaders: []string{"content-type"},
+	})
 
 	for _, h := range handlers {
 		r.Get("/"+h.Name()+"/:id", h.Read)

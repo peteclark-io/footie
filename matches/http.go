@@ -32,8 +32,8 @@ func (h *httpHandler) Create(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	resources.AddCommonHeaders(w)
 	w.WriteHeader(http.StatusOK)
-	w.Header().Add("Content-Type", "application/json")
 	enc := json.NewEncoder(w)
 	enc.Encode(m)
 }
@@ -68,8 +68,8 @@ func (h *httpHandler) Read(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	resources.AddCommonHeaders(w)
 	w.WriteHeader(http.StatusOK)
-	w.Header().Add("Content-Type", "application/json")
 	enc := json.NewEncoder(w)
 	enc.Encode(m)
 }

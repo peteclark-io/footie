@@ -69,6 +69,14 @@
   version = "v1.1.0"
 
 [[projects]]
+  digest = "1:285d38de55adb8f85047d0313db81a53fbb4337ffcf95f94085f0573b9e368da"
+  name = "github.com/fnproject/fdk-go"
+  packages = ["."]
+  pruneopts = ""
+  revision = "e0af12e7b04464874b1b44b7b765d0054ded019f"
+  version = "v0.0.1"
+
+[[projects]]
   digest = "1:617b3e0f5989d4ff866a1820480990c65dfc9257eb080da749a45e2d76681b02"
   name = "github.com/go-ini/ini"
   packages = ["."]
@@ -150,6 +158,18 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:c35276c290aec6aac873679afddac0177fc7bb4c8c76abdac696b49cea5196ac"
+  name = "github.com/tencentyun/scf-go-lib"
+  packages = [
+    "cloudfunction",
+    "cloudfunction/messages",
+    "functioncontext",
+  ]
+  pruneopts = ""
+  revision = "4a2819cda3204056923e3572cac5e9be283b4181"
+
+[[projects]]
+  branch = "master"
   digest = "1:4f349a7da3e52df38345913607fb3daac185365588a633088107146283b48b46"
   name = "golang.org/x/net"
   packages = ["context"]
@@ -175,11 +195,13 @@
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/dynamodb",
     "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute",
+    "github.com/fnproject/fdk-go",
     "github.com/husobee/vestigo",
     "github.com/jawher/mow.cli",
     "github.com/pborman/uuid",
     "github.com/sirupsen/logrus",
     "github.com/stretchr/testify/assert",
+    "github.com/tencentyun/scf-go-lib/cloudfunction",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

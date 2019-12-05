@@ -6,13 +6,13 @@ plugins:
 custom:
   stage: ${opt:stage, self:provider.stage}
   domains:
-    prod: api.eastlondon.football
-    staging: staging.eastlondon.football
-    dev: dev.eastlondon.football
+    prod: api.shoreditch.football
+    staging: staging.shoreditch.football
+    dev: dev.shoreditch.football
 
   customDomain:
     basePath: ''
-    certificateName: "*.eastlondon.football"
+    certificateName: "*.shoreditch.football"
     domainName: ${self:custom.domains.${self:custom.stage}}
     stage: "${self:custom.stage}"
     createRoute53Record: true
@@ -307,6 +307,22 @@ resources:
           ReadCapacityUnits: "1"
           WriteCapacityUnits: "1"
         TableName: "group_bookings"
+        Tags:
+          - Key: application
+            Value: footie
+    AcksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "id"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: "1"
+          WriteCapacityUnits: "1"
+        TableName: "acknowledgements"
         Tags:
           - Key: application
             Value: footie

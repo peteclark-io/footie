@@ -1,0 +1,40 @@
+.entry {
+  margin: auto;
+  margin-top: 3em;
+  width: 80vw;
+}
+
+.progress {
+  text-align: center;
+}
+
+.breadcrumbs {
+  display: inline-block;
+  margin-bottom: 2em;
+
+  span {
+    float: left;
+  }
+  .icon {
+    position: relative;
+    top: 5px;
+  }
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.sm-margin-bottom {
+  margin-bottom: 1.2em !important;
+}
+
+.lg-margin-bottom {
+  margin-bottom: 2.4em;
+}
+
+.form {
+  input {
+    min-width: 400px;
+  }
+}
