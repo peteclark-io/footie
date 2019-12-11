@@ -27,7 +27,10 @@ provider:
       Action:
         - "dynamodb:*"
       Resource: "arn:aws:dynamodb:*"
-
+    - Effect: 'Allow'
+      Action:
+        - 'ses:SendEmail'
+      Resource: ${env:EMAIL_ARN}
 package:
  exclude:
    - ./**
@@ -35,6 +38,16 @@ package:
    - ./bin/**
 
 functions:
+  acks_receive:
+    handler: bin/footie
+    environment:
+      RESOURCE: acknowledgements
+
+  tasks_email_acks:
+    handler: bin/footie
+    environment:
+      RESOURCE: tasks
+
   matches_read:
     handler: bin/footie
     environment:
@@ -246,6 +259,13 @@ functions:
 
 resources:
   Resources:
+    AllowSESInvoke:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName: { "Fn::GetAtt": [ "AcksUnderscorereceiveLambdaFunction", "Arn" ] }
+        Principal: ses.amazonaws.com
+        Action: 'lambda:InvokeFunction'
+        SourceAccount: { Ref: AWS::AccountId }
     PlayersTable:
       Type: AWS::DynamoDB::Table
       Properties:

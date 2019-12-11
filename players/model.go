@@ -24,6 +24,7 @@ type Player struct {
 	ID          string `json:"id"`
 	Email       string `json:"email,omitempty"`
 	DisplayName string `json:"displayName,omitempty"`
+	Injured     bool   `json:"injured"`
 }
 
 func unmarshalPlayer(body io.Reader) (*Player, int, error) {

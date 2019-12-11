@@ -40,6 +40,31 @@ func unmarshalGroup(body io.Reader) (*Group, int, error) {
 	return &gr, 0, nil
 }
 
+func GetGroups(db *dynamodb.DynamoDB) ([]*Group, error) {
+	res, err := db.Scan(&dynamodb.ScanInput{
+		TableName: aws.String(tableName),
+		Limit:     aws.Int64(64),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(res.Items) == 0 {
+		return nil, errGroupNotFound
+	}
+
+	groups := make([]*Group, 0)
+	for _, item := range res.Items {
+		gr, err := parseItem(db, item)
+		if err != nil {
+			return nil, err
+		}
+		groups = append(groups, gr)
+	}
+	return groups, nil
+}
+
 func GetGroup(db *dynamodb.DynamoDB, id string) (*Group, error) {
 	res, err := db.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(tableName),
@@ -58,8 +83,12 @@ func GetGroup(db *dynamodb.DynamoDB, id string) (*Group, error) {
 		return nil, errGroupNotFound
 	}
 
+	return parseItem(db, res.Item)
+}
+
+func parseItem(db *dynamodb.DynamoDB, item map[string]*dynamodb.AttributeValue) (*Group, error) {
 	gr := &Group{}
-	err = dynamodbattribute.UnmarshalMap(res.Item, gr)
+	err := dynamodbattribute.UnmarshalMap(item, gr)
 
 	if err != nil {
 		return nil, err
@@ -92,7 +121,6 @@ func GetGroup(db *dynamodb.DynamoDB, id string) (*Group, error) {
 		gr.Bookings = append(gr.Bookings, b)
 	}
 	gr.BookingIDs = nil
-
 	return gr, nil
 }
 

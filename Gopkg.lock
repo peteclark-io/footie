@@ -10,20 +10,21 @@
   version = "v0.2.0"
 
 [[projects]]
-  digest = "1:d5039f72505274cddd25fef3b4790e7d985eaf063a0c7df1363ed6292ddc30fb"
+  digest = "1:d37b5cbae31a6d3685931cdb7d355e650a5dcb265dc340b57b6f17158234bd38"
   name = "github.com/aws/aws-lambda-go"
   packages = [
     "events",
     "lambda",
+    "lambda/handlertrace",
     "lambda/messages",
     "lambdacontext",
   ]
   pruneopts = ""
-  revision = "6e2e37798efbb1dfd8e9c6681702e683a6046517"
-  version = "v1.0.1"
+  revision = "b5b7267d297de263cc5b61f8c37543daa9c95ffd"
+  version = "v1.13.3"
 
 [[projects]]
-  digest = "1:e9ff55fdac0e5d8ad3b0179d8da6af70350e4f663f46fb4b34918829e8205a95"
+  digest = "1:686e2bfdc654aac2af1692f1446a36c4aa9f5111e5511493ec79a50db8a4aed9"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -35,15 +36,21 @@
     "aws/credentials",
     "aws/credentials/ec2rolecreds",
     "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
     "aws/credentials/stscreds",
+    "aws/crr",
+    "aws/csm",
     "aws/defaults",
     "aws/ec2metadata",
     "aws/endpoints",
     "aws/request",
     "aws/session",
     "aws/signer/v4",
+    "internal/ini",
     "internal/sdkio",
+    "internal/sdkmath",
     "internal/sdkrand",
+    "internal/sdkuri",
     "internal/shareddefaults",
     "private/protocol",
     "private/protocol/json/jsonutil",
@@ -54,11 +61,13 @@
     "private/protocol/xml/xmlutil",
     "service/dynamodb",
     "service/dynamodb/dynamodbattribute",
+    "service/ses",
     "service/sts",
+    "service/sts/stsiface",
   ]
   pruneopts = ""
-  revision = "854f9d07a932452f1552955e127e50ba5ebb25cc"
-  version = "v1.13.56"
+  revision = "c5f6db9139bd300297119f712fd4e09f6b0f89f7"
+  version = "v1.25.49"
 
 [[projects]]
   digest = "1:56c130d885a4aacae1dd9c7b71cfe39912c7ebc1ff7d2b46083c8812996dc43b"
@@ -75,14 +84,6 @@
   pruneopts = ""
   revision = "e0af12e7b04464874b1b44b7b765d0054ded019f"
   version = "v0.0.1"
-
-[[projects]]
-  digest = "1:617b3e0f5989d4ff866a1820480990c65dfc9257eb080da749a45e2d76681b02"
-  name = "github.com/go-ini/ini"
-  packages = ["."]
-  pruneopts = ""
-  revision = "06f5f3d67269ccec1fe5fe4134ba6e982984f7f5"
-  version = "v1.37.0"
 
 [[projects]]
   digest = "1:5a2d1e6415389d20d86812c60feeb675b70b2d65bd1b0d9e6743616f29bc3498"
@@ -110,11 +111,11 @@
   version = "v1.0.5"
 
 [[projects]]
-  digest = "1:6f49eae0c1e5dab1dafafee34b207aeb7a42303105960944828c2079b92fc88e"
+  digest = "1:13fe471d0ed891e8544eddfeeb0471fd3c9f2015609a1c000aefdedf52a19d40"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
   pruneopts = ""
-  revision = "0b12d6b5"
+  revision = "c2b33e84"
 
 [[projects]]
   digest = "1:0f51cee70b0d254dbc93c22666ea2abf211af81c1701a96d04e2284b408621db"
@@ -192,9 +193,11 @@
     "github.com/aws/aws-lambda-go/events",
     "github.com/aws/aws-lambda-go/lambda",
     "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/awserr",
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/dynamodb",
     "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute",
+    "github.com/aws/aws-sdk-go/service/ses",
     "github.com/fnproject/fdk-go",
     "github.com/husobee/vestigo",
     "github.com/jawher/mow.cli",

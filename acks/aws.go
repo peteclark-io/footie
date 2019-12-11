@@ -1,12 +1,21 @@
 package acks
 
 import (
-	"encoding/json"
-	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	lambda "github.com/peteclark-io/footie/aws"
+	"github.com/sirupsen/logrus"
+)
+
+var addressRegex = regexp.MustCompile(`in\+([a-z0-9]{9})([a-z0-9]{9})([a-z0-9]{9})@shoreditch\.football`)
+
+const ackResource = "acknowledgements"
+
+const (
+	IN  = "IN"
+	OUT = "OUT"
 )
 
 type awsHandler struct {
@@ -17,67 +26,39 @@ func NewAWSHandler() lambda.Handler {
 	return &awsHandler{repository: &Repository{}}
 }
 
-func (h *awsHandler) Create(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	b, status, err := unmarshalAcknowledgement(strings.NewReader(request.Body))
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
+func (h *awsHandler) Configure(resource, method string) (interface{}, bool) {
+	if ackResource != resource {
+		return nil, false
 	}
 
-	status, err = h.repository.Create(b)
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
-	}
-
-	js, _ := json.Marshal(b)
-	return events.APIGatewayProxyResponse{Body: string(js), StatusCode: http.StatusOK, Headers: map[string]string{"Content-Type": "application/json"}}, nil
+	return h.Receive, true
 }
 
-func (h *awsHandler) Delete(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id, status, err := lambda.CheckID(tableKey, request)
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
+func (h *awsHandler) Receive(request events.SimpleEmailEvent) error {
+	for _, msg := range request.Records {
+		if len(msg.SES.Mail.CommonHeaders.To) > 1 {
+			logrus.WithField("to", msg.SES.Mail.CommonHeaders.To).Warn("More than one recipient")
+			continue
+		}
+
+		to := msg.SES.Mail.CommonHeaders.To[0]
+		matches := addressRegex.FindStringSubmatch(to)
+		if len(matches) != 4 {
+			logrus.WithField("to", to).Warn("Recipient does not match expected labelling")
+			continue
+		}
+
+		subject := msg.SES.Mail.CommonHeaders.Subject
+		val := strings.Contains(subject, IN)
+		if !val && !strings.Contains(subject, OUT) {
+			logrus.WithField("subject", subject).Warn("Subject is neither IN nor OUT")
+			continue
+		}
+
+		status, err := h.repository.Create(&Acknowledgement{Group: matches[1], Match: matches[2], Player: matches[3], Value: true})
+		if err != nil {
+			logrus.WithError(err).WithField("status", status).Error("Failed to write ack")
+		}
 	}
-
-	status, err = h.repository.Delete(id)
-
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
-	}
-
-	return lambda.Response("Acknowledgement deleted", http.StatusAccepted), nil
-}
-
-func (h *awsHandler) Read(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id, status, err := lambda.CheckID(tableKey, request)
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
-	}
-
-	b, status, err := h.repository.Read(id)
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
-	}
-
-	js, _ := json.Marshal(b)
-	return events.APIGatewayProxyResponse{Body: string(js), StatusCode: http.StatusOK, Headers: map[string]string{"Content-Type": "application/json"}}, nil
-}
-
-func (h *awsHandler) Write(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id, status, err := lambda.CheckID(tableKey, request)
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
-	}
-
-	b, status, err := unmarshalAcknowledgement(strings.NewReader(request.Body))
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
-	}
-
-	status, err = h.repository.Write(id, b)
-
-	if err != nil {
-		return lambda.Response(err.Error(), status), nil
-	}
-
-	return lambda.Response("Saved acknowledgement", http.StatusOK), nil
+	return nil
 }

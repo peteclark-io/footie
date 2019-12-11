@@ -9,12 +9,22 @@ import (
 	lambda "github.com/peteclark-io/footie/aws"
 )
 
+const matchesResource = "matches"
+
 type awsHandler struct {
 	repository *Repository
 }
 
 func NewAWSHandler() lambda.Handler {
 	return &awsHandler{repository: &Repository{}}
+}
+
+func (h *awsHandler) Configure(resource, method string) (interface{}, bool) {
+	if matchesResource != resource {
+		return nil, false
+	}
+
+	return lambda.FunctionForCRUDMethod(h, method), true
 }
 
 func (h *awsHandler) Create(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

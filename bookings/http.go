@@ -16,7 +16,7 @@ func NewHTTPHandler() resources.Handler {
 }
 
 func (h *httpHandler) Name() string {
-	return "bookings"
+	return bookingsResource
 }
 
 func (h *httpHandler) Create(w http.ResponseWriter, req *http.Request) {

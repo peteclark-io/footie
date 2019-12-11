@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/peteclark-io/footie/ids"
 )
 
 type Repository struct {
@@ -69,6 +70,8 @@ func (r *Repository) Create(a *Acknowledgement) (int, error) {
 	if a.ID != "" {
 		return http.StatusBadRequest, errors.New("New acknowledgements should not contain an 'id' field")
 	}
+
+	a.ID = ids.NewID()
 
 	sess := session.Must(session.NewSession())
 	db := dynamodb.New(sess)

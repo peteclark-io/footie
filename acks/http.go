@@ -16,7 +16,7 @@ func NewHTTPHandler() resources.Handler {
 }
 
 func (h *httpHandler) Name() string {
-	return "acknowledgements"
+	return ackResource
 }
 
 func (h *httpHandler) Create(w http.ResponseWriter, req *http.Request) {

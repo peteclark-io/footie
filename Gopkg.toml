@@ -22,8 +22,8 @@
 
 [[constraint]]
   name = "github.com/aws/aws-lambda-go"
-  version = "^1.0.1"
+  version = "^1.13.3"
 
 [[constraint]]
   name = "github.com/aws/aws-sdk-go"
-  version = "^v1.13.56"
+  version = "^v1.25.49"

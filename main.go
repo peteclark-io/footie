@@ -14,6 +14,7 @@ import (
 	"github.com/peteclark-io/footie/matches"
 	"github.com/peteclark-io/footie/players"
 	"github.com/peteclark-io/footie/resources"
+	"github.com/peteclark-io/footie/tasks"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -51,9 +52,16 @@ func main() {
 			handler = bookings.NewAWSHandler()
 		case "acknowledgements":
 			handler = acks.NewAWSHandler()
+		case "tasks":
+			handler = tasks.NewAWSHandler()
 		}
 
-		startAWS(*method, handler)
+		toStart, ok := handler.Configure(*resource, *method)
+		if !ok {
+			return
+		}
+
+		lambda.Start(toStart)
 	}
 
 	log.SetLevel(log.InfoLevel)
@@ -82,17 +90,4 @@ func startHTTP(handlers ...resources.Handler) {
 	}
 
 	log.Fatal(http.ListenAndServe(":8000", resources.AccessLog(log.StandardLogger(), r)))
-}
-
-func startAWS(method string, handler aws.Handler) {
-	switch method {
-	case "create":
-		lambda.Start(handler.Create)
-	case "write":
-		lambda.Start(handler.Write)
-	case "read":
-		lambda.Start(handler.Read)
-	case "delete":
-		lambda.Start(handler.Delete)
-	}
 }

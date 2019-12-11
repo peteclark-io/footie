@@ -10,6 +10,10 @@ import (
 )
 
 type Handler interface {
+	Configure(resource, method string) (interface{}, bool)
+}
+
+type CRUDHandler interface {
 	Read(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 	Write(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 	Create(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
@@ -27,4 +31,18 @@ func CheckID(tableKey string, request events.APIGatewayProxyRequest) (string, in
 		return id, http.StatusBadRequest, errors.New("Please provide an 'id'")
 	}
 	return id, 0, nil
+}
+
+func FunctionForCRUDMethod(handler CRUDHandler, method string) func(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	switch method {
+	case "create":
+		return handler.Create
+	case "write":
+		return handler.Write
+	case "read":
+		return handler.Read
+	case "delete":
+		return handler.Delete
+	}
+	return nil
 }

@@ -16,7 +16,7 @@ func NewHTTPHandler() resources.Handler {
 }
 
 func (h *httpHandler) Name() string {
-	return "matches"
+	return matchesResource
 }
 
 func (h *httpHandler) Create(w http.ResponseWriter, req *http.Request) {

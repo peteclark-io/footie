@@ -24,6 +24,7 @@ type Booking struct {
 	ID              string           `json:"id"`
 	Group           string           `json:"group"`
 	Start           *time.Time       `json:"start"`
+	End             *time.Time       `json:"end"`
 	Cadence         string           `json:"cadence"`
 	Length          int              `json:"length"`
 	Matches         []*matches.Match `json:"matches"`
@@ -83,8 +84,18 @@ func GetBooking(db *dynamodb.DynamoDB, id string) (*Booking, error) {
 		b.Matches = append(b.Matches, m)
 	}
 
+	b.End = &b.Matches[len(b.Matches)-1].StartsAt
 	b.MatchIDs = nil
 	return b, nil
+}
+
+func (b *Booking) NextMatchAfter(t time.Time) *matches.Match {
+	for _, m := range b.Matches {
+		if m.StartsAt.After(t) {
+			return m
+		}
+	}
+	return nil
 }
 
 func (b *Booking) ToItem() map[string]*dynamodb.AttributeValue {
